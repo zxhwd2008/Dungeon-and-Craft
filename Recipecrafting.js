@@ -459,7 +459,6 @@ Scene_Crafting.prototype.constructor = Scene_Crafting;
 			}
 		} else {
 			resultItem = generateResultItem(this._result._item);
-			// this._result._item = resultItem;
 			$gameParty.gainItem(resultItem,this._result._amount);
 			newItem.push(this._result);
 			$gameParty.gainCraftExp(this.categoryId(), this.xpGain());

@@ -12,6 +12,8 @@
  *    $gameParty.addNewItem("type",id)     - "weapon", "armor", or "item"
  *    <PREFIX [id,weight],[id,weight]...>
  *    <SUFFIX [id,weight],[id,weight]...>
+ *    <CRAFTEDNAME name>                    - Use the name on the crafted item
+ *                                          Otherwise will use the name property
  *    <COLOR colorCode>                    - Color code being a 6 character hex color code
  *
  *  How it works:
@@ -65,6 +67,7 @@ Game_Party.prototype.addNewItem = function(type, id, ignore) {
 	ignore = ignore || false;
 	var container = this.getContainer(type);
 	var newItem = JsonEx.makeDeepCopy(container[id]);
+	newItem.name = newItem.note.match(/<CRAFTEDNAME (.+)>/)[1] || newItem.name;
 	this.assignAffixes(type, newItem);
 	newItem.id = container.length;
 	container.push(newItem);
@@ -184,33 +187,36 @@ DataManager.extractSaveContents = function(contents) {
 	$dataItems = contents.items || $dataItems;
 };
 
-Game_Enemy.prototype.itemObject = function(kind, dataId) {
-		/*
-		 * addNewItem should only work with Weapon or Armor,
-		 * for type "item", since we don't have any affixes for it, we should ignore
-		 * Besides this, the gainItem method should be called in the Recipecrafting.js plugin
-		 * So always set ignore = true when calling the addNewItem method
-		 */
-    // if (kind === 1) {
-    //     return $gameParty.addNewItem("item",dataId,false);
-    // } else if (kind === 2) {
-    //     return $gameParty.addNewItem("weapon",dataId,false);
-    // } else if (kind === 3) {
-    //     return $gameParty.addNewItem("armor",dataId,false);
-    // } else {
-    //     return null;
-    // }
-		if (kind === 1) {
-				return $dataItems[dataId];
-		}
-		else if (kind === 2) {
-		    return $gameParty.addNewItem("weapon",dataId,true);
-		} else if (kind === 3) {
-		    return $gameParty.addNewItem("armor",dataId,true);
-		} else {
-		    return null;
-		}
-};
+/*
+ * Since I'm not going to drop any weapons on the map, I comment this out
+ */
+// Game_Enemy.prototype.itemObject = function(kind, dataId) {
+// 		/*
+// 		 * addNewItem should only work with Weapon or Armor,
+// 		 * for type "item", since we don't have any affixes for it, we should ignore
+// 		 * Besides this, the gainItem method should be called in the Recipecrafting.js plugin
+// 		 * So always set ignore = true when calling the addNewItem method
+// 		 */
+//     // if (kind === 1) {
+//     //     return $gameParty.addNewItem("item",dataId,false);
+//     // } else if (kind === 2) {
+//     //     return $gameParty.addNewItem("weapon",dataId,false);
+//     // } else if (kind === 3) {
+//     //     return $gameParty.addNewItem("armor",dataId,false);
+//     // } else {
+//     //     return null;
+//     // }
+// 		if (kind === 1) {
+// 				return $dataItems[dataId];
+// 		}
+// 		else if (kind === 2) {
+// 		    return $gameParty.addNewItem("weapon",dataId,true);
+// 		} else if (kind === 3) {
+// 		    return $gameParty.addNewItem("armor",dataId,true);
+// 		} else {
+// 		    return null;
+// 		}
+// };
 
 
 })();
