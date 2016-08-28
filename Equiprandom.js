@@ -66,8 +66,18 @@ Game_Party.prototype.addNewItemByItem = function(item) {
 Game_Party.prototype.addNewItem = function(type, id, ignore) {
 	ignore = ignore || false;
 	var container = this.getContainer(type);
+	if (!container[id].note.match(/<PREFIX (.+)>/) && !container[id].note.match(/<SUFFIX (.+)>/)) {
+		return container[id];
+	}
 	var newItem = JsonEx.makeDeepCopy(container[id]);
-	newItem.name = newItem.note.match(/<CRAFTEDNAME (.+)>/)[1] || newItem.name;
+	var newName = newItem.note.match(/<CRAFTEDNAME (.+)>/);
+	if (newName !== null) {
+		newItem.name = newName[1];
+	}
+	var newColor = newItem.note.match(/<COLOR (.+)>/);
+	if (newColor !== null) {
+		newItem._color = newColor[1];
+	}
 	this.assignAffixes(type, newItem);
 	newItem.id = container.length;
 	container.push(newItem);

@@ -469,7 +469,9 @@ Scene_Crafting.prototype.constructor = Scene_Crafting;
 		return newItem;
 
 		function generateResultItem(resultItem) {
-			if (resultItem && resultItem.wtypeId && resultItem.wtypeId === 2) {
+			if (resultItem && resultItem.itypeId && resultItem.itypeId === 1) {
+			    resultItem = $gameParty.addNewItem("item",resultItem.id,true);
+			} else if (resultItem && resultItem.wtypeId && resultItem.wtypeId === 2) {
 			    resultItem = $gameParty.addNewItem("weapon",resultItem.id,true);
 			} else if (resultItem && resultItem.atypeId && resultItem.atypeId === 3) {
 			    resultItem = $gameParty.addNewItem("armor",resultItem.id,true);
