@@ -1464,7 +1464,6 @@ var QuasiABS = {};
     var dir = action[1];
     var distance = Number(action[2]);
     var duration = Number(action[3]);
-        console.log(dir, distance, duration);
     var wait = action[4] === "true";
     SceneManager._scene.addTempCollider(this._skill.collider, duration);
     var radian = dir === "forward" ? this._skill.radian : dir;
@@ -2398,16 +2397,19 @@ var QuasiABS = {};
     if (chara > 0)   realChara = $gameMap.event(chara);
     if (realChara === this) return;
     if (this.isFriendly(realChara)) return;
+    console.log('add: ' + chara, skill);
     this._agroList[chara] = this._agroList[chara] || 0;
     this._agroList[chara] += skill && skill.agroPoints ? skill.agroPoints : 1;
     this._inCombat = true;
     var id = this === $gamePlayer ? 0 : this.eventId();
     if (!realChara._agrodList.contains(id)) realChara._agrodList.push(id);
     realChara._inCombat = true;
+    console.log('==================================================');
   };
 
   // Should be called on death / moving too far
   Game_CharacterBase.prototype.removeAgro = function(chara) {
+    console.log('remove: ' + chara);
     this._agroList[chara] = null;
     var i = this._agrodList.indexOf(chara);
     if (i !== -1) this._agrodList.splice(i, 1);
@@ -2415,12 +2417,15 @@ var QuasiABS = {};
     if (!this._inCombat && this.endCombat) {
       this.endCombat();
     }
+    console.log('==================================================');
   };
 
   Game_CharacterBase.prototype.clearAgro = function() {
     for (var charaId in this._agroList) {
       if (!this._agroList.hasOwnProperty(charaId)) continue;
       var chara = charaId == 0 ? $gamePlayer : $gameMap.event(charaId);
+      console.log('Clear:' + charaId, chara);
+      console.log($gameMap._events);
       chara.removeAgro(this === $gamePlayer ? 0 : this.eventId());
     }
     this._agroList = {};
@@ -2891,7 +2896,9 @@ var QuasiABS = {};
       if (Input.isTriggered(input)) {
         this.useSkill(absKeys[key].skillId);
       }
-      if (input === "mouse1" && TouchInput.isTriggered() && this.canClick()) {
+      if (input === "mouse1" &&
+         (TouchInput.isLongPressed() || TouchInput.isTriggered()) &&
+         this.canClick()) {
         TouchInput._triggered = false;
         this.useSkill(absKeys[key].skillId);
       }

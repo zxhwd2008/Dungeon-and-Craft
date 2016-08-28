@@ -156,6 +156,7 @@ Game_Party.prototype.assignAffix = function(type, item, affixId, prefix) {
 	for(var i = 0;i < affix.traits.length;i++) {
 		item.traits.push(affix.traits[i]);
 	}
+	item.note += affix.note;
 	if(type == "armor") {
 		if(affix.atypeId > 0) { item.atypeId = affix.atypeId; }
 	}
